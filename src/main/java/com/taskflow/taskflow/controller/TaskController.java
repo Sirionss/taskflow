@@ -4,6 +4,7 @@ import com.taskflow.taskflow.model.*;
 import com.taskflow.taskflow.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -32,10 +33,12 @@ public class TaskController {
         Task created = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public Task updateTask(@RequestBody Task taskUpdated, @PathVariable Long id){
         return taskService.updateTask(id, taskUpdated);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
@@ -73,6 +76,7 @@ public class TaskController {
     public long countByStatus(@PathVariable Status status){
         return taskService.countByStatus(status);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/status/{status}")
     public void deleteByStatus(@PathVariable Status status){
         taskService.deleteByStatus(status);
